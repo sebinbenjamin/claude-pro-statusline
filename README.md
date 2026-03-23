@@ -1,9 +1,9 @@
 # claude-pro-statusline
 
-A custom status line for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays model info, context window usage, token counts, and rate limit gauges — all color-coded at a glance.
+A custom status line for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that displays model info, context window usage, token counts, and rate limit gauges, all color-coded at a glance. Stop guessing how much of your Pro/Max quota you've burned through and when it resets.
 
 ```
-Opus 4.6 (1M context) | ━━━━──────  40k/200k 40% | 12.3kin 5.1kout | 5h ██░░░░░░░░ 20% used ~4.2h (14:30) | 7d █░░░░░░░░░ 10% used ~6d
+Opus 4.6 (1M context) | jdoe (Acme Inc) | ━━━━──────  40k/200k 40% | 12.3kin 5.1kout | 5h ██░░░░░░░░ 20% used ~4.2h (14:30) | 7d █░░░░░░░░░ 10% used ~6d
 ```
 
 ## What it shows
@@ -11,6 +11,7 @@ Opus 4.6 (1M context) | ━━━━──────  40k/200k 40% | 12.3kin 5
 | Section | Description |
 |---------|-------------|
 | **Model** | Current model name |
+| **Account** | Logged-in username and organization (via `claude auth status`) |
 | **Context window** | Bar + percentage of context used (green/yellow/red) |
 | **Tokens** | Total input and output tokens for the session |
 | **5h rate limit** | Fuel gauge for the 5-hour usage quota with reset countdown |
@@ -55,11 +56,11 @@ chmod +x ~/.claude/statusline-command.sh
 
 3. Restart Claude Code.
 
-## Customizing — available JSON fields
+## Customizing - available JSON fields
 
 The status line command receives a JSON object via stdin with all session data. Fork this script and use any of the fields below to build your own status line.
 
-See the [official Claude Code status line docs](https://docs.anthropic.com/en/docs/claude-code/status-line) for full details and examples in Bash, Python, and Node.js.
+See the [official Claude Code status line docs](https://code.claude.com/docs/en/statusline) for full details and examples in Bash, Python, and Node.js.
 
 <details>
 <summary>Full JSON schema</summary>
@@ -145,7 +146,7 @@ See the [official Claude Code status line docs](https://docs.anthropic.com/en/do
 | `agent.name` | Agent name when using `--agent` |
 | `worktree.*` | Worktree info during `--worktree` sessions |
 
-> Some fields are conditional — `vim`, `agent`, `worktree`, and `rate_limits` may be absent depending on your setup and subscription.
+> Some fields are conditional: `vim`, `agent`, `worktree`, and `rate_limits` may be absent depending on your setup and subscription.
 
 ## Uninstall
 

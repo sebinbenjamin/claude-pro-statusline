@@ -11,6 +11,21 @@ parts=()
 model=$(echo "$input" | jq -r '.model.display_name // .model.id // empty')
 [ -n "$model" ] && parts+=("${BOLD}${CYAN}${model}${R}")
 
+# Account
+if command -v claude &>/dev/null; then
+  auth=$(claude auth status --json 2>/dev/null)
+  if [ -n "$auth" ]; then
+    email=$(echo "$auth" | jq -r '.email // empty')
+    org=$(echo "$auth" | jq -r '.orgName // empty')
+    if [ -n "$email" ]; then
+      user="${email%%@*}"
+      acct="${user}"
+      [ -n "$org" ] && acct="${user} (${org})"
+      parts+=("${DIM}${acct}${R}")
+    fi
+  fi
+fi
+
 # Context bar (filled = used, so bar fills up as context is consumed)
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 ctx_size=$(echo "$input" | jq -r '.context_window.context_window_size // empty')
@@ -37,7 +52,7 @@ if [ -n "$total_in" ] && [ -n "$total_out" ]; then
 fi
 
 # Fuel gauge helper: fuel_gauge <used_pct> <reset_epoch> <label>
-# Gauge shows usage (█=used, ░=remaining) — fills up as quota is consumed
+# Gauge shows usage (█=used, ░=remaining) - fills up as quota is consumed
 epoch_fmt() {
   local epoch=$1 fmt=$2
   if date -d @0 '+%s' &>/dev/null 2>&1; then
