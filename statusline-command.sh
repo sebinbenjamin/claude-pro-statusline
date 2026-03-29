@@ -20,7 +20,19 @@ if command -v claude &>/dev/null; then
     if [ -n "$email" ]; then
       user="${email%%@*}"
       acct="${user}"
-      [ -n "$org" ] && acct="${user} (${org})"
+      domain="${email##*@}"
+      if [ -n "$org" ]; then
+        lc_org=$(echo "$org" | tr '[:upper:]' '[:lower:]')
+        lc_user=$(echo "$user" | tr '[:upper:]' '[:lower:]')
+        lc_email=$(echo "$email" | tr '[:upper:]' '[:lower:]')
+        if [[ "$lc_org" == *"$lc_user"* || "$lc_org" == *"$lc_email"* ]]; then
+          acct="${user} (${domain})"
+        else
+          acct="${user} (${org})"
+        fi
+      else
+        acct="${user} (${domain})"
+      fi
       parts+=("${DIM}${acct}${R}")
     fi
   fi
